@@ -3,26 +3,32 @@ name: Convert Illustrator to PDF
 on:
   push:
     paths:
-      - "**.ai"  # Kích hoạt khi có file .ai được push lên repo
+      - "**.ai"
 
 jobs:
   convert:
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Cài đặt Inkscape
-        run: sudo apt-get install inkscape
+        run: sudo apt-get install inkscape -y
 
-      - name: Chuyển đổi .ai sang PDF
+      - name: Kiểm tra file AI
+        run: ls -l *.ai || echo "Không tìm thấy file AI"
+
+      - name: Chuyển đổi AI sang PDF
         run: |
           for file in *.ai; do
             inkscape "$file" --export-filename="${file%.ai}.pdf"
           done
 
-      - name: Upload file PDF
+      - name: Kiểm tra file PDF
+        run: ls -l *.pdf || echo "Không tìm thấy file PDF"
+
+      - name: Upload PDF lên GitHub
         uses: actions/upload-artifact@v3
         with:
           name: converted-pdf
