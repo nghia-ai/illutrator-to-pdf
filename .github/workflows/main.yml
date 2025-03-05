@@ -13,13 +13,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Cài đặt ImageMagick
-        run: sudo apt-get install imagemagick
+      - name: Cài đặt Inkscape
+        run: sudo apt-get install inkscape
 
       - name: Chuyển đổi .ai sang PDF
         run: |
           for file in *.ai; do
-            convert "$file" "${file%.ai}.pdf"
+            inkscape "$file" --export-filename="${file%.ai}.pdf"
           done
 
       - name: Upload file PDF
