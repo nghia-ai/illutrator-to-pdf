@@ -1,0 +1,29 @@
+name: Convert Illustrator to PDF
+
+on:
+  push:
+    paths:
+      - "**.ai"  # Kích hoạt khi có file .ai được push lên repo
+
+jobs:
+  convert:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Cài đặt ImageMagick
+        run: sudo apt-get install imagemagick
+
+      - name: Chuyển đổi .ai sang PDF
+        run: |
+          for file in *.ai; do
+            convert "$file" "${file%.ai}.pdf"
+          done
+
+      - name: Upload file PDF
+        uses: actions/upload-artifact@v3
+        with:
+          name: converted-pdf
+          path: "*.pdf"
